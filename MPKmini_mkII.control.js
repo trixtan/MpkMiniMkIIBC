@@ -35,20 +35,9 @@ function init()
 		sendMidi(201, 0, on ? 1 : 0);
 	});
 
-  mpkMiniMkII = new MpkMiniMkII(cursorDevice, host);
+  mpkMiniMkII = new MpkMiniMkII(cursorDevice, host, cursorTrack);
   mpkMiniMkII.init();
 
-}
-
-function logToNode(message)
-{
-	host.connectToRemoteHost('127.0.0.1', 58008, function(conn) {
- 
-
-    conn.send(message.getBytes());
-    conn.disconnect();
-
-  });
 }
 
 function exit()
