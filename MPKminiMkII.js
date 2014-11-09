@@ -13,11 +13,108 @@ const PAD_2_NOTE= 146;
 const PAD_3_NOTE= 147;
 const PAD_4_NOTE= 148;
 
-function MpkMiniMkII(device, host, track) {
+const CC =
+{
+    PAD01 : 1,
+    PAD02 : 2,
+    PAD03 : 22,
+    PAD04 : 4,
+    PAD05 : 5,
+    PAD06 : 6,
+    PAD07 : 7,
+    PAD08 : 8,
+    PAD09 : 9,
+    PAD10 : 10,
+    PAD11 : 11,
+    PAD12 : 12,
+    PAD13 : 13,
+    PAD14 : 14,
+    PAD15 : 15,
+    PAD16 : 16
+};
+
+// Transport Controls
+var play = CC.PAD01;
+var stop = CC.PAD02;
+var rec = CC.PAD03;
+var loop = CC.PAD04;
+var tap = CC.PAD05;
+var od = CC.PAD06;
+
+// Track navigation
+var cursorTrackUp = CC.PAD07;
+var cursorTrackDown = CC.PAD08;
+
+
+var mapMacro = CC.PAD16;
+
+// Device navigation
+var prevDevice = CC.PAD13;
+var nextDevice = CC.PAD14;
+
+var shiftPadsUp = 0;
+var shiftPadsDown = 0;
+
+// Editor pages
+var note = CC.PAD09;
+var automation = CC.PAD10;
+var mixer = CC.PAD11;
+var device = CC.PAD12;
+
+
+function MpkMiniMkII(host) {
   var self = this;
   this.parameterPages = [];
 
   this.init = function() {
+	  
+	var keys = host.getMidiInPort(0).createNoteInput("MPKmini mkII Keys", "80????", "90????", "B001??", "B040??", "D0????", "E0????");
+	var padsProg1 = host.getMidiInPort(0).createNoteInput("MPKmini mkII Pads PROG1", "81????", "91????", "D1????", "E1????");
+    padsProg1.setShouldConsumeEvents(false);
+	var padsProg2 = host.getMidiInPort(0).createNoteInput("MPKmini mkII Pads PROG2", "82????", "92????", "D2????", "E2????");
+    padsProg2.setShouldConsumeEvents(false);
+	var padsProg3 = host.getMidiInPort(0).createNoteInput("MPKmini mkII Pads PROG3", "83????", "93????", "D3????", "E3????");
+    padsProg3.setShouldConsumeEvents(false);
+	var padsProg4 = host.getMidiInPort(0).createNoteInput("MPKmini mkII Pads PROG4", "84????", "94????", "D4????", "E4????");
+    padsProg4.setShouldConsumeEvents(false);
+	var midi_out = host.getMidiOutPort(0);
+
+	// /////////////////////////////////////////////// host sections
+
+	application = host.createApplication();
+	transport = host.createTransport();
+	track = host.createCursorTrack(2, 0);
+	device = track.getPrimaryDevice();
+	
+	track.getSolo().addValueObserver(function(on)
+	{
+		sendNoteOn(9, 40, on ? 1 : 0);
+		sendMidi(201, 0, on ? 1 : 0);
+	});
+	
+	
+	// Transport observers
+    transport.addIsPlayingObserver(function(isPlaying) {
+        midi_out.sendMidi(PADS_PROG_1_CC_STATUS, play, isPlaying ? 127 : 0);
+    });
+
+    transport.addIsRecordingObserver(function(isRecording) {
+        midi_out.sendMidi(PADS_PROG_1_CC_STATUS, rec, isRecording ? 127 : 0);
+    });
+
+    transport.addOverdubObserver(function(isOvr) {
+        midi_out.sendMidi(PADS_PROG_1_CC_STATUS, od, isOvr ? 127 : 0);
+    });
+
+    transport.addIsLoopActiveObserver(function(isLoop) {
+        midi_out.sendMidi(PADS_PROG_1_CC_STATUS, loop, isLoop ? 127 : 0);
+    });
+
+    transport.addMetronomeTicksObserver(function(isClick) {
+        println(isClick);
+        // midi_out.sendMidi(0xb9, loop, isLoop ? 127 : 0);
+    });
+	
 
     //Initializes pages
     for(var i=0; i<PARAMETER_PAGES_COUNT; i++) {
@@ -63,18 +160,77 @@ function MpkMiniMkII(device, host, track) {
     track.playNote(note + padShift, val);
   };
 
-  this.toggleOnOffParameter = function(parameterIndex, val) {
-    device.getParameter(parameterIndex).set(val > 0 ? 128 : 0, 128);
-  };
+  
+  this.handlePadProg1CC = function(cc, val) {
+	switch (cc)
+	{
+		case play:
+			transport.play();
+			break;
+		case stop:
+			transport.stop();
+			break;
+		case rec:
+			transport.record();
+			break;
+		case loop:
+			transport.toggleLoop();
+			break;
+		case tap:
+			var bpm = tapTempo();
+			if ( bpm ) {
+				transport.getTempo().set( bpm - 20, 647 );
+			}
+			break;
+		case od:
+			transport.toggleOverdub();
+			break;
+		case note:
+			application.toggleNoteEditor();
+			break;
+		case automation:
+			application.toggleAutomationEditor();
+			break;
+		case mixer:
+			application.toggleMixer();
+			break;
+		case device:
+			application.toggleDevices();
+			break;
+		case shiftPadsUp:
+			if (padShift < 88)
+			{
+				padShift += 8;
+			}
+			break;
+		case shiftPadsDown:
+			if (padShift > -40)
+			{
+				padShift -= 8;
+			}
+			break;
+		case prevDevice:
+			device.selectPrevious();
+			break;
+		case nextDevice:
+			device.selectNext();
+			break;
+		case cursorTrackUp:
+			track.selectPrevious();
+			break;
+		case cursorTrackDown:
+			track.selectNext();
+			break;
+	};
+  }; 
 
   this.handleMidi = function (status, data1, data2) {
     logToNode(status + ' ' + data1 + ' ' + data2);
     if(status === PAGE_MODE_1_PC_STATUS || status === PAGE_MODE_2_PC_STATUS) {
       //Handle page change
       self.togglePage(getPageFromStatusAndPC(status, data1));
-    } else if (status === PADS_PROG_1_CC_STATUS || status === PADS_PROG_2_CC_STATUS) {
-      //Handle toggles
-      this.toggleOnOffParameter(getToggleParameterIndexFromCC(data1), data2);
+    } else if (status === PADS_PROG_1_CC_STATUS) {
+      self.handlePadProg1CC(data1, data2);
     } else if(status === KNOBS_CC_STATUS) {
       if(data1 <= 9) {
         device.getParameter(getKnobParameterIndexFromCC(data1)).set(data2, 128);
@@ -87,9 +243,11 @@ function MpkMiniMkII(device, host, track) {
       }
 
     } else if(status === PAD_1_NOTE || status === PAD_2_NOTE || status === PAD_3_NOTE || status === PAD_4_NOTE) {
-      this.playPadNote(status, data1, data2);
+      self.playPadNote(status, data1, data2);
     }
   };
+  
+  
 
 };
 
@@ -126,3 +284,41 @@ function ParameterPage() {
   this.name = null;
 
 };
+/*
+function timestamp() {
+    return (new Date()).getTime();
+};
+
+var state = {
+	bpm_tap: {
+		bpm: [],
+		ts: []
+	}
+};
+
+function tapTempo() {
+	var bpm, bpm_last, bpm_median, bpm_average = 0;
+	var ts_now = timestamp();
+	var ts_len = state.bpm_tap.ts.length;
+	var ts_len_h = parseInt( ts_len/2 );
+	var ts_last = state.bpm_tap.ts[ ts_len - 1 ];
+	if ( ts_last === undefined || ts_now - ts_last > 1000 ) {
+		state.bpm_tap.bpm = [];
+		state.bpm_tap.ts = [ ts_now ];
+		return false;
+	} else {
+		bpm = 60000 / ( ts_now - ts_last );
+		state.bpm_tap.bpm.push( bpm );
+		state.bpm_tap.ts.push( ts_now );
+	}
+	if ( ts_len > 5 ) {
+		bpm_median = Math.round( state.bpm_tap.bpm.sort()[ ts_len_h - 1 ] );
+		//bpm_average += state.bpm_tap.bpm[ ts_len_h - 2 ];
+		bpm_average += state.bpm_tap.bpm[ ts_len_h - 1 ];
+		bpm_average += state.bpm_tap.bpm[ ts_len_h - 0 ];
+		bpm_average += state.bpm_tap.bpm[ ts_len_h + 1 ];
+		bpm_average = Math.round( bpm_average / 3 );
+		return Math.round(( bpm_median + bpm_average ) / 2);
+	}
+	return false;
+};*/
