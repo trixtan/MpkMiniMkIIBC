@@ -1,73 +1,29 @@
+load("Mappings.js");
+
 const PARAMETER_PAGES_COUNT = 32;
 
 const MIN_PAGE_SWITCH_PROGRAM_CHANGE = 0;
 const MAX_PAGE_SWITCH_PROGRAM_CHANGE = 31;
 
-const KNOBS_CC_STATUS = 176;
-const PADS_PROG_1_CC_STATUS = 177;
-const PADS_PROG_2_CC_STATUS = 178;
-const PAGE_MODE_1_PC_STATUS = 193;
-const PAGE_MODE_2_PC_STATUS = 194;
-const PAD_1_NOTE= 145;
-const PAD_2_NOTE= 146;
-const PAD_3_NOTE= 147;
-const PAD_4_NOTE= 148;
-
-const CC =
-{
-    PAD01 : 1,
-    PAD02 : 2,
-    PAD03 : 22,
-    PAD04 : 4,
-    PAD05 : 5,
-    PAD06 : 6,
-    PAD07 : 7,
-    PAD08 : 8,
-    PAD09 : 9,
-    PAD10 : 10,
-    PAD11 : 11,
-    PAD12 : 12,
-    PAD13 : 13,
-    PAD14 : 14,
-    PAD15 : 15,
-    PAD16 : 16
-};
-
-// Transport Controls
-var play = CC.PAD01;
-var stop = CC.PAD02;
-var rec = CC.PAD03;
-var loop = CC.PAD04;
-var tap = CC.PAD05;
-var od = CC.PAD06;
-
-// Track navigation
-var cursorTrackUp = CC.PAD07;
-var cursorTrackDown = CC.PAD08;
-
-
-var mapMacro = CC.PAD16;
-
-// Device navigation
-var prevDevice = CC.PAD13;
-var nextDevice = CC.PAD14;
-
-var shiftPadsUp = 0;
-var shiftPadsDown = 0;
-
-// Editor pages
-var note = CC.PAD09;
-var automation = CC.PAD10;
-var mixer = CC.PAD11;
-var device = CC.PAD12;
-
-
 function MpkMiniMkII(host) {
   var self = this;
   this.parameterPages = [];
+    
+  this.loadMappings = function() {
+	for (var key in MKII_MAPPINGS.PROG01.PADS) {
+		var obj = validation_messages[key];
+	}
+  };
 
   this.init = function() {
-	  
+	this.loadMappings();
+
+	var createNoteInputFunction = host.getMidiInPort(0).createNoteInput;
+	for(var i=0; i<mappings.noteInputs.length; i++) {
+		var noteInput = createNoteInput.apply(null, mappings.noteInputs[i].slice(1));
+		noteInput.setShouldConsumeEvents(mappings.noteInputs[i][0]);
+	}
+	/*
 	var keys = host.getMidiInPort(0).createNoteInput("MPKmini mkII Keys", "80????", "90????", "B001??", "B040??", "D0????", "E0????");
 	var padsProg1 = host.getMidiInPort(0).createNoteInput("MPKmini mkII Pads PROG1", "81????", "91????", "D1????", "E1????");
     padsProg1.setShouldConsumeEvents(false);
@@ -77,6 +33,7 @@ function MpkMiniMkII(host) {
     padsProg3.setShouldConsumeEvents(false);
 	var padsProg4 = host.getMidiInPort(0).createNoteInput("MPKmini mkII Pads PROG4", "84????", "94????", "D4????", "E4????");
     padsProg4.setShouldConsumeEvents(false);
+	*/
 	var midi_out = host.getMidiOutPort(0);
 
 	// /////////////////////////////////////////////// host sections
@@ -94,6 +51,7 @@ function MpkMiniMkII(host) {
 	
 	
 	// Transport observers
+	/*
     transport.addIsPlayingObserver(function(isPlaying) {
         midi_out.sendMidi(PADS_PROG_1_CC_STATUS, play, isPlaying ? 127 : 0);
     });
@@ -114,18 +72,13 @@ function MpkMiniMkII(host) {
         println(isClick);
         // midi_out.sendMidi(0xb9, loop, isLoop ? 127 : 0);
     });
+	*/
 	
 
     //Initializes pages
     for(var i=0; i<PARAMETER_PAGES_COUNT; i++) {
       self.parameterPages.push(new ParameterPage());
     }
-
-    //Popup active Page name observer
-    device.addSelectedPageObserver(-1, function (pageIndex) {
-      if(pageIndex < 0 ) return;
-
-    });
 
     device.addPageNamesObserver(function () {
       if(!arguments) return;
@@ -155,34 +108,34 @@ function MpkMiniMkII(host) {
   };
 
   this.playPadNote = function(status, note, val) {
-    var padShift = (status % PAD_1_NOTE) * 8;
-
+	var padIndex = mappings.getZeroBasedPadIndexFromNoteStatus(status);
+    var padShift = padIndex * 8;
     track.playNote(note + padShift, val);
   };
 
   
-  this.handlePadProg1CC = function(cc, val) {
+  this.handleTransportControl = function(cc, val) {
 	switch (cc)
 	{
-		case play:
+		case mappings.play:
 			transport.play();
 			break;
-		case stop:
+		case mappings.stop:
 			transport.stop();
 			break;
-		case rec:
+		case mappings.rec:
 			transport.record();
 			break;
-		case loop:
+		case mappings.loop:
 			transport.toggleLoop();
 			break;
-		case tap:
+		case mappings.tap:
 			var bpm = tapTempo();
 			if ( bpm ) {
 				transport.getTempo().set( bpm - 20, 647 );
 			}
 			break;
-		case od:
+		case mappings.od:
 			transport.toggleOverdub();
 			break;
 		case note:
@@ -226,34 +179,32 @@ function MpkMiniMkII(host) {
 
   this.handleMidi = function (status, data1, data2) {
     logToNode(status + ' ' + data1 + ' ' + data2);
-    if(status === PAGE_MODE_1_PC_STATUS || status === PAGE_MODE_2_PC_STATUS) {
+    if(mappings.isAParameterPageChangeStatus(status)) {
       //Handle page change
-      self.togglePage(getPageFromStatusAndPC(status, data1));
-    } else if (status === PADS_PROG_1_CC_STATUS) {
-      self.handlePadProg1CC(data1, data2);
-    } else if(status === KNOBS_CC_STATUS) {
-      if(data1 <= 9) {
-        device.getParameter(getKnobParameterIndexFromCC(data1)).set(data2, 128);
-      } else if (data1 >=10 && data1 <= 17) {
-        //Macros
-        device.getMacro(data1 - 10).getAmount().set(data2, 128);
-      } else if (data1 >= 18 && data1 <=25) {
-        //User mappable knobs
-        userControls.getControl(data1 - 18).set(data2, 128);
+	  if(var padIndex = mappings.getParameterPageFromStatusAndPc(status, data1)) {
+		self.togglePage(padIndex);
+	  }
+    } else if (mappings.isTransportControlStatus(status)) {
+      self.handleTransportControl(data1, data2);
+    } else if(mappings.isAKnob()) {
+	  var knobIndex;
+      if(knobIndex = mappings.getPageParameterControlKnobIndex(status, data1)) {
+		//Page Parameter
+        device.getParameter(knobIndex).set(data2, 128);
+      } 
+	  else if (knobIndex = mappings.getMacroControlKnobIndex(status, data1)) {
+		//Macros
+        device.getMacro(knobIndex).getAmount().set(data2, 128);
       }
-
-    } else if(status === PAD_1_NOTE || status === PAD_2_NOTE || status === PAD_3_NOTE || status === PAD_4_NOTE) {
+	  else if (knobIndex = mappings.getUserDeviceControlKnobIndex(status, cc)) {
+        //User mappable knobs
+        userControls.getControl(knobIndex).set(data2, 128);
+      }
+    } else if(mappings.isAPadNote(status)) {
       self.playPadNote(status, data1, data2);
     }
   };
-  
-  
 
-};
-
-function getToggleParameterIndexFromCC(cc) {
-  //In every page, positions 8 to 23 are for on/off controls
-  return cc - 1 + 8;
 };
 
 function getKnobParameterIndexFromCC(cc) {
@@ -274,17 +225,13 @@ function logToNode(message)
   */
 }
 
-function getPageFromStatusAndPC (pcStatus, pc) {
-  if(pcStatus === PAGE_MODE_1_PC_STATUS) return pc;
-  if(pcStatus === PAGE_MODE_2_PC_STATUS) return pc + 15;
-}
-
 function ParameterPage() {
   var self = this;
   this.name = null;
 
 };
-/*
+
+//TAP Tempo
 function timestamp() {
     return (new Date()).getTime();
 };
@@ -321,4 +268,4 @@ function tapTempo() {
 		return Math.round(( bpm_median + bpm_average ) / 2);
 	}
 	return false;
-};*/
+};
