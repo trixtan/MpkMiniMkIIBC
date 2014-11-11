@@ -3,7 +3,7 @@ const MidiDirection = {
 };
 
 
-function MkIIMappings(handlersRegistry) {
+co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 	var self = this;
 	
 	this.noteInputs= [
@@ -29,21 +29,21 @@ function MkIIMappings(handlersRegistry) {
 				}
 			},
 			PADS: [
-				{CC:1, PC:0, ccH: null, pcH: 'dv.pPage1'}, //PAD01
+				{CC:1, PC:0, ccH: 'tc.stop', pcH: 'dv.pPage1'}, //PAD01
 				{CC:2, PC:1, ccH: 'tc.play', pcH: 'dv.pPage2'}, //PAD02
-				{CC:3, PC:2, ccH: 'tc.stop', pcH: 'dv.pPage3'}, //PAD03
-				{CC:4, PC:3, ccH: 'tc.rec', pcH: 'dv.pPage4'}, //PAD04
+				{CC:3, PC:2, ccH: 'tc.rec', pcH: 'dv.pPage3'}, //PAD03
+				{CC:4, PC:3, ccH: null, pcH: 'dv.pPage4'}, //PAD04
 				{CC:5, PC:4, ccH: 'tc.loop', pcH: 'dv.pPage5'}, //PAD05
 				{CC:6, PC:5, ccH: 'tc.tap', pcH: 'dv.pPage6'}, //PAD06
 				{CC:7, PC:6, ccH: 'tc.od', pcH: 'dv.pPage7'}, //PAD07
 				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage8'}, //PAD08
-				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage9'}, //PAD09
+				{CC:9, PC:8, ccH: 'tk.nextSlot', pcH: 'dv.pPage9'}, //PAD09
 				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage10'}, //PAD10
 				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage11'}, //PAD11
 				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage12'}, //PAD12
-				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage13'}, //PAD13
-				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage14'}, //PAD14
-				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage15'}, //PAD15
+				{CC:13, PC:12, ccH: 'tk.prevSlot', pcH: 'dv.pPage13'}, //PAD13
+				{CC:14, PC:13, ccH: 'tk.prevTrack', pcH: 'dv.pPage14'}, //PAD14
+				{CC:15, PC:14, ccH: 'tk.nextTrack', pcH: 'dv.pPage15'}, //PAD15
 				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage16'} //PAD16
 			],
 			KNOBS: [
@@ -184,13 +184,13 @@ function MkIIMappings(handlersRegistry) {
 	
 	this.init = function() {
 		//Build functions map
-		for(int i=0; i<self.PROGS.length; i++) {
+		for(var i=0; i<self.PROGS.length; i++) {
 			var prog = self.PROGS[i];
-			for(j=0; j<prog.KNOBS; j++) {
+			for(var j=0; j<prog.KNOBS; j++) {
 				var knob = prog.KNOBS[j];
 				handlersRegistry.addMidiMessage(knob.ccH, prog.STATUS.KNOBS.CC, knob.CC);
 			}
-			for(j=0; j<prog.PADS; j++) {
+			for(var j=0; j<prog.PADS; j++) {
 				var pad = prog.PADS[j];
 				handlersRegistry.addMidiMessage(pad.ccH, prog.STATUS.PADS.CC, pad.CC);
 				handlersRegistry.addMidiMessage(pad.pcH, prog.STATUS.PADS.PC, pad.PC);
@@ -199,22 +199,25 @@ function MkIIMappings(handlersRegistry) {
 	};
 	
 	this.getFunctionId = function (status, data1) {
-		for(int i=0; i<self.PROGS.length; i++) {
+		for(var i=0; i<self.PROGS.length; i++) {
+			var handler;
 			if(self.PROGS[i].STATUS.KNOBS.CC === status) {
-				return self.getKnobHandler(i, data1);
+				handler = self.getKnobHandler(i, data1);
 			}
 			if(self.PROGS[i].STATUS.PADS.CC === status) {
-				return self.getPadCCHandler(i, data1);
+				handler = self.getPadCCHandler(i, data1);
 			}
 			if(self.PROGS[i].STATUS.PADS.PC === status) {
-				return self.getPadPCHandler(i, data1);
+				handler = self.getPadPCHandler(i, data1);
 			}
+			if (handler) return handler;
 		}
+		return null;
 	};
 	
 	this.getKnobHandler = function(prog, cc) {
 		var knobs = self.PROGS[prog].KNOBS;
-		for(int i=0; i<knobs.length; i++) {
+		for(var i=0; i<knobs.length; i++) {
 			if(knobs[i].CC === cc) {
 				return knobs[i].ccH;
 			}
@@ -223,7 +226,7 @@ function MkIIMappings(handlersRegistry) {
 	
 	this.getPadCCHandler = function(prog, cc) {
 		var pads = self.PROGS[prog].PADS;
-		for(int i=0; i<pads.length; i++) {
+		for(var i=0; i<pads.length; i++) {
 			if(pads[i].CC === cc) {
 				return pads[i].ccH;
 			}
@@ -232,7 +235,7 @@ function MkIIMappings(handlersRegistry) {
 	
 	this.getPadPCHandler = function(prog, pc) {
 		var pads = self.PROGS[prog].PADS;
-		for(int i=0; i<pads.length; i++) {
+		for(var i=0; i<pads.length; i++) {
 			if(pads[i].PC === pc) {
 				return pads[i].pcH;
 			}

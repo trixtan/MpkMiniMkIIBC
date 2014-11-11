@@ -1,4 +1,4 @@
-function HandlersRegistry() {
+co.nri.HandlersRegistry = function HandlersRegistry() {
 	var self = this;
 	this._registry = {};
 	
@@ -12,7 +12,7 @@ function HandlersRegistry() {
 	};
 	
 	this.setHandler = function(functionId, handler) {
-		self._initHandlerIfNeeded(functionid);
+		self._initHandlerIfNeeded(functionId);
 		self._registry[functionId].handler = handler;
 	};
 	

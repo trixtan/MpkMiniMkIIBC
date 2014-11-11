@@ -1,11 +1,13 @@
-load("mkIIControls/DeviceControl.js");
-load("mkIIControls/MacroControl.js");
-load("mkIIControls/TransportControl.js");
-load("mkIIControls/UserDefinedControl.js");
+load("controls/CommonControlFunctions.js");
+load("controls/DeviceControl.js");
+load("controls/MacroControl.js");
+load("controls/TransportControl.js");
+load("controls/UserDefinedControl.js");
+load("controls/TrackControl.js");
 load("HandlersRegistry.js");
 load("Mappings.js");
 
-function MpkMiniMkII(host) {
+co.nri.MpkMiniMkII = function MpkMiniMkII(host) {
   var self = this;
   this.handlersRegistry;
   this.mappings;
@@ -16,33 +18,29 @@ function MpkMiniMkII(host) {
 	track = host.createCursorTrack(2, 0);
 	device = track.getPrimaryDevice();
 	var midiOut = host.getMidiOutPort(0);
+	var midiIn = host.getMidiInPort(0);
 	
-	var tc = new TransportControl(host, device, transport, midiOut);
-	var dv = new DeviceControl(host, device, transport, midiOut);
-	var mc = new MacroControl(host, device, transport, midiOut);
-	var ud = new UserDefinedControl(host, device, transport, midiOut);
+	self.handlersRegistry = new co.nri.HandlersRegistry();
+	co.nri.CommonControlFunctions(self.handlersRegistry, midiOut);
+	self.mappings = new co.nri.MkIIMappings(self.handlersRegistry);
+	
+	var tc = new co.nri.tr.TransportControl(self.handlersRegistry, host, device, transport, track);
+	var dv = new co.nri.dv.DeviceControl(self.handlersRegistry, host, device, transport, track);
+	var mc = new co.nri.mc.MacroControl(self.handlersRegistry, host, device, transport, track);
+	var ud = new co.nri.ud.UserDefinedControl(self.handlersRegistry, host, device, transport, track);
+	var tk = new co.nri.tk.TrackControl(self.handlersRegistry, host, device, transport, track);
 	tc.init();
 	dv.init();
 	mc.init();
 	ud.init();
-	
-	self.handlersRegistry = new handlersRegistry();
-	
-	self.mappings = new MkIIMappings(self.handlersRegistry);
+	tk.init();
 	
 	//NOTE INPUTS
-	var createNoteInputFunction = host.getMidiInPort(0).createNoteInput;
+	var createNoteInputFunction = midiIn.createNoteInput;
 	for(var i=0; i<self.mappings.noteInputs.length; i++) {
-		var noteInput = createNoteInput.apply(null, self.mappings.noteInputs[i].slice(1));
+		var noteInput = createNoteInputFunction.apply(midiIn, self.mappings.noteInputs[i].slice(1));
 		noteInput.setShouldConsumeEvents(self.mappings.noteInputs[i][0]);
-	}
-	
-	
-	track.getSolo().addValueObserver(function(on)
-	{
-		sendNoteOn(9, 40, on ? 1 : 0);
-		sendMidi(201, 0, on ? 1 : 0);
-	}); 
+	} 
   };
 
   
@@ -54,13 +52,16 @@ function MpkMiniMkII(host) {
     track.playNote(note + padShift, val);
   };*/
 
-  }; 
-
   this.handleMidi = function (status, data1, data2) {
 	
 	var functionId = self.mappings.getFunctionId(status, data1);
 	var handler = self.handlersRegistry.getHandler(functionId);
-	handler(MidiDirection.IN, status, data1, data2);
+	if(handler) {
+		handler(MidiDirection.IN, status, data1, data2);
+	} else {
+		println('WAARNING: no map for status: ' + status + ' data1: ' + data1 + ' data2: ' + data2);
+	}
+	
 	
 	/*
     if(mappings.isAParameterPageChangeStatus(status)) {
@@ -91,16 +92,3 @@ function MpkMiniMkII(host) {
   };
 
 };
-
-function logToNode(message)
-{
-  /*
-	host.connectToRemoteHost('127.0.0.1', 58008, function(conn) {
-
-
-    conn.send(message.getBytes());
-    conn.disconnect();
-
-  });
-  */
-}
