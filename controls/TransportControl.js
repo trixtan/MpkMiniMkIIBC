@@ -1,34 +1,66 @@
-function TransportControl(host, device, transport) {
+var PLAY = 'tc.play';
+var STOP = 'tc.stop';
+var REC = 'tc.rec';
+var LOOP = 'tc.loop';
+var TAP = 'tc.tap';
+var OD = 'tc.od';
+
+function TransportControl() {
+	//Extends BaseControl
+	BaseControl.call(this);
 	var self = this;
+	
+	this.init = function(registry, host, device, transport, midiOut) {
+		BaseControl.call(this, )
+		
+		transport.addIsRecordingObserver(function(isRecording) {
+			midi_out.sendMidi(PADS_PROG_1_CC_STATUS, rec, isRecording ? 127 : 0);
+		});
+
+		transport.addOverdubObserver(function(isOvr) {
+			midi_out.sendMidi(PADS_PROG_1_CC_STATUS, od, isOvr ? 127 : 0);
+		});
+
+		transport.addIsLoopActiveObserver(function(isLoop) {
+			midi_out.sendMidi(PADS_PROG_1_CC_STATUS, loop, isLoop ? 127 : 0);
+		});
+
+		transport.addMetronomeTicksObserver(function(isClick) {
+			println(isClick);
+			// midi_out.sendMidi(0xb9, loop, isLoop ? 127 : 0);
+		});
+	};
 
 	// Handlers
-	this.play = function(direction, status, data1, val) {
+	registry.addHandler('tc.play') = function(direction, status, data1, val) {
 		transport.play();		
 	};
 	
-	this.stop = function(direction, status, data1, val) {
+	registry.addHandler('tc.stop') = function(direction, status, data1, val) {
 		transport.stop();
 	};
 	
-	this.rec = function(direction, status, data1, val) {
+	registry.addHandler('tc.rec') = function(direction, status, data1, val) {
 		transport.record();
 	};
 	
-	this.loop = function(direction, status, data1, val) {
+	registry.addHandler('tc.loop') = function(direction, status, data1, val) {
 		transport.toggleLoop();
 	};
 	
-	this.tap = function(direction, status, data1, val) {
+	registry.addHandler('tc.tap') = function(direction, status, data1, val) {
 		var bpm = tapTempo();
 		if (bpm) {
 			transport.getTempo().set(bpm - 20, 647);
 		}
 	};
 	
-	this.od = function(direction, status, data1, val) {
+	registry.addHandler('tc.od') = function(direction, status, data1, val) {
 		transport.toggleOverdub();
 	};
 };
+
+BaseControl.prototype = new BaseControl();
 
 //TAP Tempo
 function timestamp() {

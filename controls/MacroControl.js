@@ -1,7 +1,9 @@
-function MacroControl(host, device) {
+function MacroControl(registry, host, device) {
 	var self = this;
 	
 	this.init = function() {
+		
+		registry.mc = {};
 	
 		for ( var p = 0; p < 8; p++)
 		{
@@ -16,12 +18,12 @@ function MacroControl(host, device) {
 	};
 	
 	//Handlers
-	this.macro1 = function(direction, status, data1, val) {self.macro(0, val);};
-	this.macro2 = function(direction, status, data1, val) {self.macro(1, val);};
-	this.macro3 = function(direction, status, data1, val) {self.macro(2, val);};
-	this.macro4 = function(direction, status, data1, val) {self.macro(3, val);};
-	this.macro5 = function(direction, status, data1, val) {self.macro(4, val);};
-	this.macro6 = function(direction, status, data1, val) {self.macro(5, val);};
-	this.macro7 = function(direction, status, data1, val) {self.macro(6, val);};
-	this.macro8 = function(direction, status, data1, val) {self.macro(7, val);};
+	registry.setHandler('mc.macro1') = function(direction, status, data1, val) {self.macro(0, val);};
+	registry.setHandler('mc.macro2') = function(direction, status, data1, val) {self.macro(1, val);};
+	registry.setHandler('mc.macro3') = function(direction, status, data1, val) {self.macro(2, val);};
+	registry.setHandler('mc.macro4') = function(direction, status, data1, val) {self.macro(3, val);};
+	registry.setHandler('mc.macro5') = function(direction, status, data1, val) {self.macro(4, val);};
+	registry.setHandler('mc.macro6') = function(direction, status, data1, val) {self.macro(5, val);};
+	registry.setHandler('mc.macro7') = function(direction, status, data1, val) {self.macro(6, val);};
+	registry.setHandler('mc.macro8') = function(direction, status, data1, val) {self.macro(7, val);};
 };

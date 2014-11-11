@@ -2,13 +2,9 @@ const MidiDirection = {
 	IN: 0, OUT:1
 };
 
-//tc: Transport Control
-//dv: Device Control
-//mc: Device Control
-//ud: User Defined Control
-function MkIIMappings(tc, dv, mc, ud) {
+
+function MkIIMappings(handlersRegistry) {
 	var self = this;
-	this.functionsMap = {};
 	
 	this.noteInputs= [
 		//First element in array is consumeEvent
@@ -33,32 +29,32 @@ function MkIIMappings(tc, dv, mc, ud) {
 				}
 			},
 			PADS: [
-				{CC:1, PC:0, ccH: null, pcH: dv.pPage1}, //PAD01
-				{CC:2, PC:1, ccH: tc.play, pcH: dv.pPage2}, //PAD02
-				{CC:3, PC:2, ccH: tc.stop, pcH: dv.pPage3}, //PAD03
-				{CC:4, PC:3, ccH: tc.rec, pcH: dv.pPage4}, //PAD04
-				{CC:5, PC:4, ccH: tc.loop, pcH: dv.pPage5}, //PAD05
-				{CC:6, PC:5, ccH: tc.tap, pcH: dv.pPage6}, //PAD06
-				{CC:7, PC:6, ccH: tc.od, pcH: dv.pPage7}, //PAD07
-				{CC:8, PC:7, ccH: null, pcH: dv.pPage8}, //PAD08
-				{CC:9, PC:8, ccH: null, pcH: dv.pPage9}, //PAD09
-				{CC:10, PC:9, ccH: null, pcH: dv.pPage10}, //PAD10
-				{CC:11, PC:10, ccH: null, pcH: dv.pPage11}, //PAD11
-				{CC:12, PC:11, ccH: null, pcH: dv.pPage12}, //PAD12
-				{CC:13, PC:12, ccH: null, pcH: dv.pPage13}, //PAD13
-				{CC:14, PC:13, ccH: null, pcH: dv.pPage14}, //PAD14
-				{CC:15, PC:14, ccH: null, pcH: dv.pPage15}, //PAD15
-				{CC:16, PC:15, ccH: null, pcH: dv.pPage16} //PAD16
+				{CC:1, PC:0, ccH: null, pcH: 'dv.pPage1'}, //PAD01
+				{CC:2, PC:1, ccH: 'tc.play', pcH: 'dv.pPage2'}, //PAD02
+				{CC:3, PC:2, ccH: 'tc.stop', pcH: 'dv.pPage3'}, //PAD03
+				{CC:4, PC:3, ccH: 'tc.rec', pcH: 'dv.pPage4'}, //PAD04
+				{CC:5, PC:4, ccH: 'tc.loop', pcH: 'dv.pPage5'}, //PAD05
+				{CC:6, PC:5, ccH: 'tc.tap', pcH: 'dv.pPage6'}, //PAD06
+				{CC:7, PC:6, ccH: 'tc.od', pcH: 'dv.pPage7'}, //PAD07
+				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage8'}, //PAD08
+				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage9'}, //PAD09
+				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage10'}, //PAD10
+				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage11'}, //PAD11
+				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage12'}, //PAD12
+				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage13'}, //PAD13
+				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage14'}, //PAD14
+				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage15'}, //PAD15
+				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage16'} //PAD16
 			],
 			KNOBS: [
-				{CC: 2, ccH: dv.pageParameter1}, //K1
-				{CC: 3, ccH: dv.pageParameter2}, //K2
-				{CC: 4, ccH: dv.pageParameter3}, //K3
-				{CC: 5, ccH: dv.pageParameter4}, //K4
-				{CC: 6, ccH: dv.pageParameter5}, //K5
-				{CC: 7, ccH: dv.pageParameter6}, //K6
-				{CC: 8, ccH: dv.pageParameter7}, //K7
-				{CC: 9, ccH: dv.pageParameter8} //K8
+				{CC: 2, ccH: 'dv.pageParameter1'}, //K1
+				{CC: 3, ccH: 'dv.pageParameter2'}, //K2
+				{CC: 4, ccH: 'dv.pageParameter3'}, //K3
+				{CC: 5, ccH: 'dv.pageParameter4'}, //K4
+				{CC: 6, ccH: 'dv.pageParameter5'}, //K5
+				{CC: 7, ccH: 'dv.pageParameter6'}, //K6
+				{CC: 8, ccH: 'dv.pageParameter7'}, //K7
+				{CC: 9, ccH: 'dv.pageParameter8'} //K8
 			]
 		},
 		// PROG2 START ***************
@@ -74,32 +70,32 @@ function MkIIMappings(tc, dv, mc, ud) {
 				}
 			},
 			PADS: [
-				{CC:1, PC:0, ccH: null, pcH: dv.pPage17}, //PAD01
-				{CC:2, PC:1, ccH: null, pcH: dv.pPage18}, //PAD02
-				{CC:3, PC:2, ccH: null, pcH: dv.pPage19}, //PAD03
-				{CC:4, PC:3, ccH: null, pcH: dv.pPage20}, //PAD04
-				{CC:5, PC:4, ccH: null, pcH: dv.pPage21}, //PAD05
-				{CC:6, PC:5, ccH: null, pcH: dv.pPage22}, //PAD06
-				{CC:7, PC:6, ccH: null, pcH: dv.pPage23}, //PAD07
-				{CC:8, PC:7, ccH: null, pcH: dv.pPage24}, //PAD08
-				{CC:9, PC:8, ccH: null, pcH: dv.pPage25}, //PAD09
-				{CC:10, PC:9, ccH: null, pcH: dv.pPage26}, //PAD10
-				{CC:11, PC:10, ccH: null, pcH: dv.pPage27}, //PAD11
-				{CC:12, PC:11, ccH: null, pcH: dv.pPage28}, //PAD12
-				{CC:13, PC:12, ccH: null, pcH: dv.pPage29}, //PAD13
-				{CC:14, PC:13, ccH: null, pcH: dv.pPage30}, //PAD14
-				{CC:15, PC:14, ccH: null, pcH: dv.pPage31}, //PAD15
-				{CC:16, PC:15, ccH: null, pcH: dv.pPage32} //PAD16
+				{CC:1, PC:0, ccH: null, pcH: 'dv.pPage17'}, //PAD01
+				{CC:2, PC:1, ccH: null, pcH: 'dv.pPage18'}, //PAD02
+				{CC:3, PC:2, ccH: null, pcH: 'dv.pPage19'}, //PAD03
+				{CC:4, PC:3, ccH: null, pcH: 'dv.pPage20'}, //PAD04
+				{CC:5, PC:4, ccH: null, pcH: 'dv.pPage21'}, //PAD05
+				{CC:6, PC:5, ccH: null, pcH: 'dv.pPage22'}, //PAD06
+				{CC:7, PC:6, ccH: null, pcH: 'dv.pPage23'}, //PAD07
+				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage24'}, //PAD08
+				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage25'}, //PAD09
+				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage26'}, //PAD10
+				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage27'}, //PAD11
+				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage28'}, //PAD12
+				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage29'}, //PAD13
+				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage30'}, //PAD14
+				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage31'}, //PAD15
+				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage32'} //PAD16
 			],
 			KNOBS: [
-				{CC: 2, ccH: dv.pageParameter1}, //K1
-				{CC: 3, ccH: dv.pageParameter2}, //K2
-				{CC: 4, ccH: dv.pageParameter3}, //K3
-				{CC: 5, ccH: dv.pageParameter4}, //K4
-				{CC: 6, ccH: dv.pageParameter5}, //K5
-				{CC: 7, ccH: dv.pageParameter6}, //K6
-				{CC: 8, ccH: dv.pageParameter7}, //K7
-				{CC: 9, ccH: dv.pageParameter8} //K8
+				{CC: 2, ccH: 'dv.pageParameter1'}, //K1
+				{CC: 3, ccH: 'dv.pageParameter2'}, //K2
+				{CC: 4, ccH: 'dv.pageParameter3'}, //K3
+				{CC: 5, ccH: 'dv.pageParameter4'}, //K4
+				{CC: 6, ccH: 'dv.pageParameter5'}, //K5
+				{CC: 7, ccH: 'dv.pageParameter6'}, //K6
+				{CC: 8, ccH: 'dv.pageParameter7'}, //K7
+				{CC: 9, ccH: 'dv.pageParameter8'} //K8
 			]
 		},
 		// PROG3 START ***************
@@ -133,14 +129,14 @@ function MkIIMappings(tc, dv, mc, ud) {
 				{CC:16, PC:15} //PAD16
 			],
 			KNOBS: [
-				{CC: 10, ccH: mc.macro1}, //K1
-				{CC: 11, ccH: mc.macro2}, //K2
-				{CC: 12, ccH: mc.macro3}, //K3
-				{CC: 13, ccH: mc.macro4}, //K4
-				{CC: 14, ccH: mc.macro5}, //K5
-				{CC: 15, ccH: mc.macro6}, //K6
-				{CC: 16, ccH: mc.macro7}, //K7
-				{CC: 17, ccH: mc.macro8} //K8
+				{CC: 10, ccH: 'mc.macro1'}, //K1
+				{CC: 11, ccH: 'mc.macro2'}, //K2
+				{CC: 12, ccH: 'mc.macro3'}, //K3
+				{CC: 13, ccH: 'mc.macro4'}, //K4
+				{CC: 14, ccH: 'mc.macro5'}, //K5
+				{CC: 15, ccH: 'mc.macro6'}, //K6
+				{CC: 16, ccH: 'mc.macro7'}, //K7
+				{CC: 17, ccH: 'mc.macro8'} //K8
 			]
 		},
 		// PROG4 START ***************
@@ -174,14 +170,14 @@ function MkIIMappings(tc, dv, mc, ud) {
 				{CC:16, PC:15} //PAD16
 			],
 			KNOBS: [
-				{CC: 18, ccH: ud.userControl1}, //K1
-				{CC: 19, ccH: ud.userControl2}, //K2
-				{CC: 20, ccH: ud.userControl3}, //K3
-				{CC: 21, ccH: ud.userControl4}, //K4
-				{CC: 22, ccH: ud.userControl5}, //K5
-				{CC: 23, ccH: ud.userControl6}, //K6
-				{CC: 24, ccH: ud.userControl7}, //K7
-				{CC: 25, ccH: ud.userControl8} //K8
+				{CC: 18, ccH: 'ud.userControl1'}, //K1
+				{CC: 19, ccH: 'ud.userControl2'}, //K2
+				{CC: 20, ccH: 'ud.userControl3'}, //K3
+				{CC: 21, ccH: 'ud.userControl4'}, //K4
+				{CC: 22, ccH: 'ud.userControl5'}, //K5
+				{CC: 23, ccH: 'ud.userControl6'}, //K6
+				{CC: 24, ccH: 'ud.userControl7'}, //K7
+				{CC: 25, ccH: 'ud.userControl8'} //K8
 			]
 		}
 	];
@@ -192,12 +188,17 @@ function MkIIMappings(tc, dv, mc, ud) {
 			var prog = self.PROGS[i];
 			for(j=0; j<prog.KNOBS; j++) {
 				var knob = prog.KNOBS[j];
-				var functionName = knob.ccH
+				handlersRegistry.addMidiMessage(knob.ccH, prog.STATUS.KNOBS.CC, knob.CC);
+			}
+			for(j=0; j<prog.PADS; j++) {
+				var pad = prog.PADS[j];
+				handlersRegistry.addMidiMessage(pad.ccH, prog.STATUS.PADS.CC, pad.CC);
+				handlersRegistry.addMidiMessage(pad.pcH, prog.STATUS.PADS.PC, pad.PC);
 			}
 		}
 	};
 	
-	this.getHandler = function (status, data1) {
+	this.getFunctionId = function (status, data1) {
 		for(int i=0; i<self.PROGS.length; i++) {
 			if(self.PROGS[i].STATUS.KNOBS.CC === status) {
 				return self.getKnobHandler(i, data1);
