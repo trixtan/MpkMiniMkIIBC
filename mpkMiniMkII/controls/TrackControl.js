@@ -2,41 +2,51 @@ co.nri.tk = {};
 
 co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport, track) {
 	var self = this;
+	this.trackBank;
 	
-	this.slots;
-	this.selectedSlot = 0;
-	this.selectedTrack;
+	this.slots = [];
+	this.grid = [];
+	this.canScrollUp = false;
+	this.canScrollDown = false;
+	this.canScrollLeft = false;
+	this.canScrollRight = false;
 	
 	this.init = function() {
-		
-		var trackBank;
-		self.slots = host.createCursorTrack(8,8).getClipLauncherSlots();
-		self.slots.setIndication(false)
-		
-		registry.setHandler('tk.nextTrack', function(direction, status, data1, val) {
-			if(val === 0) return;
-			track.selectNext();
-		});
-		
-		registry.setHandler('tk.prevTrack', function(direction, status, data1, val) {
-			if(val === 0) return;
-			track.selectPrevious();
-			//println(trackBank.getTrack(0));
 			
+		self.trackBank = host.createMainTrackBank(4, 2, 2);
+		
+		self.trackBank.addCanScrollTracksUpObserver(function(can){
+			self.canScrollRight = can;
+		});
+		self.trackBank.addCanScrollTracksDownObserver(function(can){
+			self.canScrollLeft = can;
+		});
+		self.trackBank.ddCanScrollScenesUpObserver(function(can){
+			self.canScrollUp = can;
+		});
+		self.trackBank.ddCanScrollScenesDownObserver(function(can){
+			self.canScrollDown = can;
 		});
 		
-		registry.setHandler('tk.nextSlot', function(direction, status, data1, val) {
-			if(val === 0) return;
-			//track.getClipLauncherSlots().select(++self.selectedSlot);#
-			//println(trackBank.getTrack(0).getClipLauncherSlots());
-			self.slots.select(++self.selectedSlot);
-		});
-		
-		registry.setHandler('tk.prevSlot', function(direction, status, data1, val) {
-			if(val === 0) return;
-			if(self.selectedSlot === 0) return;
 			
-			self.slots.select(--self.selectedSlot);
+		registry.setHandler('tk.trackBankRight', function(direction, status, data1, val) {
+			if(!self.canScrollRight) return;
+			self.trackBank.scrollTracksPageUp();
+		});
+		
+		registry.setHandler('tk.trackBankLeft', function(direction, status, data1, val) {
+			if(!self.canScrollLeft) return;
+			self.trackBank.scrollTracksPageDown();
+		});
+		
+		registry.setHandler('tk.trackBankDown', function(direction, status, data1, val) {
+			if(!self.canScrollDown) return;
+			self.trackBank.scrollScenesPageDown();
+		});
+		
+		registry.setHandler('tk.trackBankUp', function(direction, status, data1, val) {
+			if(!self.canScrollUp) return;
+			self.trackBank.scrollScenesPageUp();
 		});
 		
 		registry.setHandler('tk.record', function(direction, status, data1, val) {
@@ -60,6 +70,28 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 			self.slots.stop();
 		});
 		
+		registry.setHandler('tk.slot1', function(direction, status, data1, val) {
+			if(val === 0) return;
+			if(self.selectedSlot === 0) return;
+			
+			self.slots.stop();
+		});
+	};
+	
+	this.handleTrackBankScroll = function () {
+		//TODO: indication
+	};
+	
+	this.selectSlotInBank = function(trackIndex, slotIndex) {
+		//TODO: can I select? do observers!
+		self.getChannel(trackIndex).getClipLauncherSlots().select(slotIndex);
+	};
+	
+	this.slot = function () {
+		//is empty? -> record
+		//is not empty? -> launch
+		//is playing or is recording? -> stop
+		//is not empty and double click? -> overdub
 	};
 	
 };

@@ -37,13 +37,13 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC:6, PC:5, ccH: 'tc.tap', pcH: 'dv.pPage6'}, //PAD06
 				{CC:7, PC:6, ccH: 'tc.od', pcH: 'dv.pPage7'}, //PAD07
 				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage8'}, //PAD08
-				{CC:9, PC:8, ccH: 'tk.nextSlot', pcH: 'dv.pPage9'}, //PAD09
+				{CC:9, PC:8, ccH: 'tk.trackBankDown', pcH: 'dv.pPage9'}, //PAD09
 				{CC:10, PC:9, ccH: 'tk.stop', pcH: 'dv.pPage10'}, //PAD10
 				{CC:11, PC:10, ccH: 'tk.launch', pcH: 'dv.pPage11'}, //PAD11
 				{CC:12, PC:11, ccH: 'tk.record', pcH: 'dv.pPage12'}, //PAD12
-				{CC:13, PC:12, ccH: 'tk.prevSlot', pcH: 'dv.pPage13'}, //PAD13
-				{CC:14, PC:13, ccH: 'tk.prevTrack', pcH: 'dv.pPage14'}, //PAD14
-				{CC:15, PC:14, ccH: 'tk.nextTrack', pcH: 'dv.pPage15'}, //PAD15
+				{CC:13, PC:12, ccH: 'tk.trackBankUp', pcH: 'dv.pPage13'}, //PAD13
+				{CC:14, PC:13, ccH: 'tk.trackBankLeft', pcH: 'dv.pPage14'}, //PAD14
+				{CC:15, PC:14, ccH: 'tk.trackBankRight', pcH: 'dv.pPage15'}, //PAD15
 				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage16'} //PAD16
 			],
 			KNOBS: [
@@ -70,22 +70,22 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				}
 			},
 			PADS: [
-				{CC:1, PC:0, ccH: null, pcH: 'dv.pPage17'}, //PAD01
-				{CC:2, PC:1, ccH: null, pcH: 'dv.pPage18'}, //PAD02
-				{CC:3, PC:2, ccH: null, pcH: 'dv.pPage19'}, //PAD03
-				{CC:4, PC:3, ccH: null, pcH: 'dv.pPage20'}, //PAD04
-				{CC:5, PC:4, ccH: null, pcH: 'dv.pPage21'}, //PAD05
-				{CC:6, PC:5, ccH: null, pcH: 'dv.pPage22'}, //PAD06
-				{CC:7, PC:6, ccH: null, pcH: 'dv.pPage23'}, //PAD07
-				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage24'}, //PAD08
-				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage25'}, //PAD09
-				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage26'}, //PAD10
-				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage27'}, //PAD11
-				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage28'}, //PAD12
-				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage29'}, //PAD13
-				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage30'}, //PAD14
-				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage31'}, //PAD15
-				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage32'} //PAD16
+				{CC:1, PC:0, ccH: 'tk.slot1', pcH: 'dv.pPage17'}, //PAD01
+				{CC:2, PC:1, ccH: 'tk.slot2', pcH: 'dv.pPage18'}, //PAD02
+				{CC:3, PC:2, ccH: 'tk.slot3', pcH: 'dv.pPage19'}, //PAD03
+				{CC:4, PC:3, ccH: 'tk.slot4', pcH: 'dv.pPage20'}, //PAD04
+				{CC:5, PC:4, ccH: 'tk.slot5', pcH: 'dv.pPage21'}, //PAD05
+				{CC:6, PC:5, ccH: 'tk.slot6', pcH: 'dv.pPage22'}, //PAD06
+				{CC:7, PC:6, ccH: 'tk.slot7', pcH: 'dv.pPage23'}, //PAD07
+				{CC:8, PC:7, ccH: 'tk.slot8', pcH: 'dv.pPage24'}, //PAD08
+				{CC:9, PC:8, ccH: 'tk.slot9', pcH: 'dv.pPage25'}, //PAD09
+				{CC:10, PC:9, ccH: 'tk.slot10', pcH: 'dv.pPage26'}, //PAD10
+				{CC:11, PC:10, ccH: 'tk.slot11', pcH: 'dv.pPage27'}, //PAD11
+				{CC:13, PC:12, ccH: 'tk.slot12', pcH: 'dv.pPage29'}, //PAD13
+				{CC:12, PC:11, ccH: 'tk.slot13', pcH: 'dv.pPage28'}, //PAD12
+				{CC:14, PC:13, ccH: 'tk.slot14', pcH: 'dv.pPage30'}, //PAD14
+				{CC:15, PC:14, ccH: 'tk.slot15', pcH: 'dv.pPage31'}, //PAD15
+				{CC:16, PC:15, ccH: 'tk.slot16', pcH: 'dv.pPage32'} //PAD16
 			],
 			KNOBS: [
 				{CC: 2, ccH: 'dv.pageParameter1'}, //K1
