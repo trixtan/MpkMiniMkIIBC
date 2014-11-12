@@ -1,8 +1,11 @@
 co.nri.HandlersRegistry = function HandlersRegistry() {
 	var self = this;
-	this._registry = {};
+	this._registry = {
+		status: {}
+	};
 	
 	this._initHandlerIfNeeded = function(functionId) {
+		if('status' === functionId) return;
 		if(!self._registry[functionId]) {
 			self._registry[functionId] = {
 				handler: null,
@@ -30,6 +33,14 @@ co.nri.HandlersRegistry = function HandlersRegistry() {
 	
 	this.getMidiMessages = function(functionId) {
 		return self._registry[functionId] ? self._registry[functionId].midiMessages : null;
+	};
+	
+	this.getStatus = function(statusId) {
+		return self._registry.status[statusId] ? self._registry.status[statusId] : null;
+	};
+	
+	this.setStatus = function(statusId, status) {
+		self._registry.status[statusId] = status;
 	};
 	
 };

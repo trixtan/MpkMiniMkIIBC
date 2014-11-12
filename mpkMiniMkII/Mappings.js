@@ -81,8 +81,8 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC:9, PC:8, ccH: 'tk.slot9', pcH: 'dv.pPage25'}, //PAD09
 				{CC:10, PC:9, ccH: 'tk.slot10', pcH: 'dv.pPage26'}, //PAD10
 				{CC:11, PC:10, ccH: 'tk.slot11', pcH: 'dv.pPage27'}, //PAD11
-				{CC:13, PC:12, ccH: 'tk.slot12', pcH: 'dv.pPage29'}, //PAD13
-				{CC:12, PC:11, ccH: 'tk.slot13', pcH: 'dv.pPage28'}, //PAD12
+				{CC:12, PC:11, ccH: 'tk.slot12', pcH: 'dv.pPage29'}, //PAD13
+				{CC:13, PC:12, ccH: 'tk.slot13', pcH: 'dv.pPage28'}, //PAD12
 				{CC:14, PC:13, ccH: 'tk.slot14', pcH: 'dv.pPage30'}, //PAD14
 				{CC:15, PC:14, ccH: 'tk.slot15', pcH: 'dv.pPage31'}, //PAD15
 				{CC:16, PC:15, ccH: 'tk.slot16', pcH: 'dv.pPage32'} //PAD16

@@ -13,7 +13,7 @@ co.nri.tr.TransportControl = function TransportControl(registry, host, device, t
 	this.init = function() {
 
 		transport.addIsPlayingObserver(function(isPlaying) {
-			co.nri.sendMidi(co.nri.tr.PLAY, isPlaying);
+			registry.setStatus('tc.isPlaying', isPlaying);
 		});
 		transport.addIsRecordingObserver(function(isRecording) {
 			co.nri.sendMidi(co.nri.tr.REC, isRecording);
