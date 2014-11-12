@@ -38,9 +38,9 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC:7, PC:6, ccH: 'tc.od', pcH: 'dv.pPage7'}, //PAD07
 				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage8'}, //PAD08
 				{CC:9, PC:8, ccH: 'tk.nextSlot', pcH: 'dv.pPage9'}, //PAD09
-				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage10'}, //PAD10
-				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage11'}, //PAD11
-				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage12'}, //PAD12
+				{CC:10, PC:9, ccH: 'tk.stop', pcH: 'dv.pPage10'}, //PAD10
+				{CC:11, PC:10, ccH: 'tk.launch', pcH: 'dv.pPage11'}, //PAD11
+				{CC:12, PC:11, ccH: 'tk.record', pcH: 'dv.pPage12'}, //PAD12
 				{CC:13, PC:12, ccH: 'tk.prevSlot', pcH: 'dv.pPage13'}, //PAD13
 				{CC:14, PC:13, ccH: 'tk.prevTrack', pcH: 'dv.pPage14'}, //PAD14
 				{CC:15, PC:14, ccH: 'tk.nextTrack', pcH: 'dv.pPage15'}, //PAD15

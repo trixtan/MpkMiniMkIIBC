@@ -39,6 +39,27 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 			self.slots.select(--self.selectedSlot);
 		});
 		
+		registry.setHandler('tk.record', function(direction, status, data1, val) {
+			if(val === 0) return;
+			if(self.selectedSlot === 0) return;
+			self.slots.select(self.selectedSlot);
+			self.slots.record(self.selectedSlot);
+		});
+		
+		registry.setHandler('tk.launch', function(direction, status, data1, val) {
+			if(val === 0) return;
+			if(self.selectedSlot === 0) return;
+			self.slots.select(self.selectedSlot);
+			self.slots.launch(self.selectedSlot);
+		});
+		
+		registry.setHandler('tk.stop', function(direction, status, data1, val) {
+			if(val === 0) return;
+			if(self.selectedSlot === 0) return;
+			
+			self.slots.stop();
+		});
+		
 	};
 	
 };
