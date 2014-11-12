@@ -4,17 +4,32 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 	var self = this;
 	this.trackBank;
 	
-	this.slots = [];
-	this.grid = [];
 	this.canScrollUp = false;
 	this.canScrollDown = false;
 	this.canScrollLeft = false;
 	this.canScrollRight = false;
 	
+	//Absolute Coordinates of the trackBank
+	this.trackIndex; //X
+	this.sceneIndex; //Y
+	//Every slot is identified by :
+	//- its trackBank absolute coordinates
+	//- its relative track position in trackBank
+	//- its index in track
+	this.slots = {};
+	
 	this.init = function() {
 			
-		self.trackBank = host.createMainTrackBank(4, 2, 2);
+		self.trackBank = host.createMainTrackBank(4, 2, 4);
+		self.trackBank.setTrackScrollStepSize(4);
 		
+		//OBSERVERS
+		self.trackBank.addChannelScrollPositionObserver(function(idx){
+			self.trackIndex = idx;
+		},-1);
+		self.trackBank.addSceneScrollPositionObserver(function(idx){
+			self.sceneIndex = idx;
+		},-1);
 		self.trackBank.addCanScrollTracksUpObserver(function(can){
 			self.canScrollRight = can;
 		});
@@ -28,7 +43,7 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 			self.canScrollDown = can;
 		});
 		
-			
+		//HANDLERS
 		registry.setHandler('tk.trackBankRight', function(direction, status, data1, val) {
 			if(!self.canScrollRight) return;
 			self.trackBank.scrollTracksPageUp();
@@ -83,8 +98,11 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 	};
 	
 	this.selectSlotInBank = function(trackIndex, slotIndex) {
-		//TODO: can I select? do observers!
-		self.getChannel(trackIndex).getClipLauncherSlots().select(slotIndex);
+		if(!self.trackBank) return;
+		var channel = self.getChannel(trackIndex);
+		if(!channel) return;
+		var clips = channel.getClipLauncherSlots();
+		.select(slotIndex);
 	};
 	
 	this.slot = function () {
