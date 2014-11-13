@@ -1,3 +1,5 @@
+load("Joystick.js");
+
 const MidiDirection = {
 	IN: 0, OUT:1
 };
@@ -8,7 +10,7 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 	
 	this.noteInputs= [
 		//First element in array is consumeEvent
-		[false, "MPKmini mkII Keys", "80????", "90????", "B001??", "B040??", "D0????", "E0????"],
+		[true, "MPKmini mkII Keys", "80????", "90????", "B001??", "B040??", "D0????", "E0????"],
 		[true, "MPKmini mkII Pads PROG1", "81????", "91????", "D1????", "E1????"],
 		[true, "MPKmini mkII Pads PROG2", "82????", "92????", "D2????", "E2????"],
 		[true, "MPKmini mkII Pads PROG3", "83????", "93????", "D3????", "E3????"],
@@ -37,13 +39,13 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC:6, PC:5, ccH: 'tc.tap', pcH: 'dv.pPage6'}, //PAD06
 				{CC:7, PC:6, ccH: 'tc.od', pcH: 'dv.pPage7'}, //PAD07
 				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage8'}, //PAD08
-				{CC:9, PC:8, ccH: 'tk.trackBankDown', pcH: 'dv.pPage9'}, //PAD09
+				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage9'}, //PAD09
 				{CC:10, PC:9, ccH: 'tk.stop', pcH: 'dv.pPage10'}, //PAD10
 				{CC:11, PC:10, ccH: 'tk.launch', pcH: 'dv.pPage11'}, //PAD11
 				{CC:12, PC:11, ccH: 'tk.record', pcH: 'dv.pPage12'}, //PAD12
-				{CC:13, PC:12, ccH: 'tk.trackBankUp', pcH: 'dv.pPage13'}, //PAD13
-				{CC:14, PC:13, ccH: 'tk.trackBankLeft', pcH: 'dv.pPage14'}, //PAD14
-				{CC:15, PC:14, ccH: 'tk.trackBankRight', pcH: 'dv.pPage15'}, //PAD15
+				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage13'}, //PAD13
+				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage14'}, //PAD14
+				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage15'}, //PAD15
 				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage16'} //PAD16
 			],
 			KNOBS: [
@@ -84,14 +86,14 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC:6, PC:5, ccH: 'tk.slot6', pcH: 'dv.pPage22'}, //PAD06
 				{CC:7, PC:6, ccH: 'tk.slot7', pcH: 'dv.pPage23'}, //PAD07
 				{CC:8, PC:7, ccH: 'tk.slot8', pcH: 'dv.pPage24'}, //PAD08
-				{CC:9, PC:8, ccH: 'tk.slot9', pcH: 'dv.pPage25'}, //PAD09
-				{CC:10, PC:9, ccH: 'tk.slot10', pcH: 'dv.pPage26'}, //PAD10
-				{CC:11, PC:10, ccH: 'tk.slot11', pcH: 'dv.pPage27'}, //PAD11
-				{CC:12, PC:11, ccH: 'tk.slot12', pcH: 'dv.pPage29'}, //PAD13
-				{CC:13, PC:12, ccH: 'tk.slot13', pcH: 'dv.pPage28'}, //PAD12
-				{CC:14, PC:13, ccH: 'tk.slot14', pcH: 'dv.pPage30'}, //PAD14
-				{CC:15, PC:14, ccH: 'tk.slot15', pcH: 'dv.pPage31'}, //PAD15
-				{CC:16, PC:15, ccH: 'tk.slot16', pcH: 'dv.pPage32'} //PAD16
+				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage25'}, //PAD09
+				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage26'}, //PAD10
+				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage27'}, //PAD11
+				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage29'}, //PAD13
+				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage28'}, //PAD12
+				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage30'}, //PAD14
+				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage31'}, //PAD15
+				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage32'} //PAD16
 			],
 			KNOBS: [
 				{CC: 2, ccH: 'dv.pageParameter1'}, //K1
@@ -104,10 +106,10 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 9, ccH: 'dv.pageParameter8'} //K8
 			],
 			JOYSTICK: {
-				LEFT: {CC:10},
-				RIGHT: {CC: 11},
-				UP: {CC: 12},
-				DOWN: {CC: 13}
+				LEFT: {CC:30, ccH: 'tk.trackBankLeft'},
+				RIGHT: {CC: 31, ccH: 'tk.trackBankRight'},
+				UP: {CC: 32, ccH: 'tk.trackBankUp'},
+				DOWN: {CC: 33, ccH: 'tk.trackBankDown'}
 			}
 		},
 		// PROG3 START ***************
@@ -151,10 +153,10 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 17, ccH: 'mc.macro8'} //K8
 			],
 			JOYSTICK: {
-				LEFT: {CC:18},
-				RIGHT: {CC: 19},
-				UP: {CC: 20},
-				DOWN: {CC: 21}
+				LEFT: {CC:34},
+				RIGHT: {CC: 35},
+				UP: {CC: 36},
+				DOWN: {CC: 37}
 			}
 		},
 		// PROG4 START ***************
@@ -198,14 +200,21 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 25, ccH: 'ud.userControl8'} //K8
 			],
 			JOYSTICK: {
-				LEFT: {CC:26},
-				RIGHT: {CC: 27},
-				UP: {CC: 28},
-				DOWN: {CC: 29}
+				LEFT: {CC:38},
+				RIGHT: {CC: 39},
+				UP: {CC: 40},
+				DOWN: {CC: 41}
 			}
 		}
 	];
-	
+
+	this.joysticks = [
+		new co.nri.Joystick(),
+		new co.nri.Joystick(),
+		new co.nri.Joystick(),
+		new co.nri.Joystick()
+	];
+
 	this.init = function() {
 		//Build functions map
 		for(var i=0; i<self.PROGS.length; i++) {
@@ -219,20 +228,47 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				handlersRegistry.addMidiMessage(pad.ccH, prog.STATUS.PADS.CC, pad.CC);
 				handlersRegistry.addMidiMessage(pad.pcH, prog.STATUS.PADS.PC, pad.PC);
 			}
-			var joystickL = prog.JOYSTICK.LEFT;
-			var joystickR = prog.JOYSTICK.RIGHT;
-			var joystickU = prog.JOYSTICK.UP;
-			var joystickD = prog.JOYSTICK.DOWN;
-			handlersRegistry.addMidiMessage(joystickL.ccH, prog.STATUS.PADS.CC, pad.CC);
-			
+			handlersRegistry.addMidiMessage(prog.JOYSTICK.LEFT.ccH, prog.STATUS.KNOBS.CC, prog.JOYSTICK.LEFT.CC);
+			handlersRegistry.addMidiMessage(prog.JOYSTICK.RIGHT.ccH, prog.STATUS.KNOBS.CC, prog.JOYSTICK.RIGHT.CC);
+			handlersRegistry.addMidiMessage(prog.JOYSTICK.UP.ccH, prog.STATUS.KNOBS.CC, prog.JOYSTICK.UP.CC);
+			handlersRegistry.addMidiMessage(prog.JOYSTICK.DOWN.ccH, prog.STATUS.KNOBS.CC, prog.JOYSTICK.DOWN.CC);
+
+			//Wrap Joystick handlers.
+			self.wrapInJoystick('up', i, prog.JOYSTICK.UP.ccH);
+			self.wrapInJoystick('down', i, prog.JOYSTICK.DOWN.ccH);
+			self.wrapInJoystick('left', i, prog.JOYSTICK.LEFT.ccH);
+			self.wrapInJoystick('right', i, prog.JOYSTICK.RIGHT.ccH);
 		}
 	};
-	
+
+	this.wrapInJoystick = function(direction, prog, handlerId) {
+		var _handler = handlersRegistry.getHandler(handlerId);
+		if(!_handler) return;
+		switch(direction) {
+			case 'up':
+				self.joysticks[prog].addUpCallback(_handler);
+				handlersRegistry.setHandler(handlerId, self.joysticks[prog].up);
+				break;
+			case 'down':
+				self.joysticks[prog].addDownCallback(_handler);
+				handlersRegistry.setHandler(handlerId, self.joysticks[prog].down);
+				break;
+			case 'left':
+				self.joysticks[prog].addLeftCallback(_handler);
+				handlersRegistry.setHandler(handlerId, self.joysticks[prog].left);
+				break;
+			case 'right':
+				self.joysticks[prog].addRightCallback(_handler);
+				handlersRegistry.setHandler(handlerId, self.joysticks[prog].right);
+				break;
+		}
+	};
+
 	this.getFunctionId = function (status, data1) {
 		for(var i=0; i<self.PROGS.length; i++) {
 			var handler;
 			if(self.PROGS[i].STATUS.KNOBS.CC === status) {
-				handler = self.getKnobHandler(i, data1);
+				handler = self.getKnobOrJoystickHandler(i, data1);
 			}
 			if(self.PROGS[i].STATUS.PADS.CC === status) {
 				handler = self.getPadCCHandler(i, data1);
@@ -245,12 +281,25 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 		return null;
 	};
 	
-	this.getKnobHandler = function(prog, cc) {
+	this.getKnobOrJoystickHandler = function(prog, cc) {
 		var knobs = self.PROGS[prog].KNOBS;
 		for(var i=0; i<knobs.length; i++) {
 			if(knobs[i].CC === cc) {
 				return knobs[i].ccH;
 			}
+		}
+		var joystick = self.PROGS[prog].JOYSTICK;
+		if(joystick.LEFT.CC === cc) {
+			return joystick.LEFT.ccH;
+		}
+		if(joystick.RIGHT.CC === cc) {
+			return joystick.RIGHT.ccH;
+		}
+		if(joystick.UP.CC === cc) {
+			return joystick.UP.ccH;
+		}
+		if(joystick.DOWN.CC === cc) {
+			return joystick.DOWN.ccH;
 		}
 		return null;
 	};

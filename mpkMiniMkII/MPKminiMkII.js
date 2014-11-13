@@ -7,6 +7,8 @@ load("controls/TrackControl.js");
 load("HandlersRegistry.js");
 load("Mappings.js");
 
+co.nri.DBL_CLICK_THRESHOLD = 200; //ms
+
 co.nri.MpkMiniMkII = function MpkMiniMkII(host) {
   var self = this;
   this.handlersRegistry;
@@ -34,6 +36,7 @@ co.nri.MpkMiniMkII = function MpkMiniMkII(host) {
 	mc.init();
 	ud.init();
 	tk.init();
+	self.mappings.init();
 	
 	//NOTE INPUTS
 	var createNoteInputFunction = midiIn.createNoteInput;
@@ -53,42 +56,13 @@ co.nri.MpkMiniMkII = function MpkMiniMkII(host) {
   };*/
 
   this.handleMidi = function (status, data1, data2) {
-	
-	var functionId = self.mappings.getFunctionId(status, data1);
-	var handler = self.handlersRegistry.getHandler(functionId);
-	if(handler) {
-		handler(MidiDirection.IN, status, data1, data2);
-	} else {
-		println('WAARNING: no map for status: ' + status + ' data1: ' + data1 + ' data2: ' + data2);
-	}
-	
-	
-	/*
-    if(mappings.isAParameterPageChangeStatus(status)) {
-      //Handle page change
-	  if(var padIndex = mappings.getParameterPageFromStatusAndPc(status, data1)) {
-		self.togglePage(padIndex);
-	  }
-    } else if (mappings.isTransportControlStatus(status)) {
-      self.handleTransportControl(data1, data2);
-    } else if(mappings.isAKnob()) {
-	  var knobIndex;
-      if(knobIndex = mappings.getPageParameterControlKnobIndex(status, data1)) {
-		//Page Parameter
-        device.getParameter(knobIndex).set(data2, 128);
-      } 
-	  else if (knobIndex = mappings.getMacroControlKnobIndex(status, data1)) {
-		//Macros
-        
-      }
-	  else if (knobIndex = mappings.getUserDeviceControlKnobIndex(status, cc)) {
-        //User mappable knobs
-        userControls.getControl(knobIndex).set(data2, 128);
-      }
-    } else if(mappings.isAPadNote(status)) {
-      self.playPadNote(status, data1, data2);
-    }
-	*/
+		var functionId = self.mappings.getFunctionId(status, data1);
+		var handler = self.handlersRegistry.getHandler(functionId);
+		if(handler) {
+			handler(MidiDirection.IN, status, data1, data2);
+		} else {
+			println('WARNING: no map for status: ' + status + ' data1: ' + data1 + ' data2: ' + data2);
+		}
   };
 
 };

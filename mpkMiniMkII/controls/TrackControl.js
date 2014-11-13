@@ -1,5 +1,7 @@
 co.nri.tk = {};
 
+co.nri.tk.SCENES_NUM = 2;
+
 co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport, track) {
 	var self = this;
 	this.trackBank;
@@ -18,7 +20,7 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 	
 	this.init = function() {
 			
-		self.trackBank = host.createMainTrackBank(4, 2, 4);
+		self.trackBank = host.createMainTrackBank(4, 2, co.nri.tk.SCENES_NUM);
 		self.track0 = self.trackBank.getChannel(0).getClipLauncherSlots();
 		self.track1 = self.trackBank.getChannel(1).getClipLauncherSlots();
 		self.track2 = self.trackBank.getChannel(2).getClipLauncherSlots();
@@ -30,7 +32,7 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 		
 		for (var i=0; i<4; i++) {
 			var _trackSlots = [];
-			for (var j=0; j<4; j++) {
+			for (var j=0; j<co.nri.tk.SCENES_NUM; j++) {
 				_trackSlots.push({
 					isSelected: false,
 					hasContent: false,
@@ -39,35 +41,37 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 					isQueued: false
 				});
 			}
-			self.slots.push(_trackSlots);
+			self.slots.push({
+				trackSelected: false,
+				trackSlots: _trackSlots
+			});
 		}
 		//OBSERVERS
 		for (var k=0; k<4; k++) {
 			function setS(){
 				var _track = self['track'+k];
 				var _i = k;
+				self.trackBank.getChannel(_i).addIsSelectedObserver(function(isSelected){
+					self.slots[_i].trackSelected = isSelected;
+				});
 				_track.addIsSelectedObserver(function(slotIndex, isSelected){
-					//println('track : ' +_i + ' slot: ' + _i + ' is selected: '+ isSelected);
-					self.slots[_i][slotIndex].isSelected = isSelected;
+					self.slots[_i].trackSlots[slotIndex].isSelected = isSelected;
 				});
 				_track.addIsPlayingObserver(function(slotIndex, isPlaying){
-					self.slots[_i][slotIndex].isPlaying = isPlaying;
+					self.slots[_i].trackSlots[slotIndex].isPlaying = isPlaying;
 				});
 				_track.addHasContentObserver(function(slotIndex, hasContent){
-					self.slots[_i][slotIndex].hasContent = hasContent;
+					self.slots[_i].trackSlots[slotIndex].hasContent = hasContent;
 				});
 				_track.addIsRecordingObserver(function(slotIndex, isRecording){
-					self.slots[_i][slotIndex].isRecording = isRecording;
+					self.slots[_i].trackSlots[slotIndex].isRecording = isRecording;
 				});
 				_track.addIsQueuedObserver(function(slotIndex, isQueued){
-					self.slots[_i][slotIndex].isQueued = isQueued;
+					self.slots[_i].trackSlots[slotIndex].isQueued = isQueued;
 				});
 			};
 			setS();
 		}
-		self.track1.addIsSelectedObserver(function(slotIndex){
-			
-		});
 		
 		self.trackBank.addChannelScrollPositionObserver(function(idx){
 			self.trackIndex = idx;
@@ -160,30 +164,6 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 		registry.setHandler('tk.slot8', function(direction, status, data1, val) {
 			self.slot(3, 0, val);
 		});
-		registry.setHandler('tk.slot9', function(direction, status, data1, val) {
-			self.slot(0, 3, val);
-		});
-		registry.setHandler('tk.slot10', function(direction, status, data1, val) {
-			self.slot(1, 3, val);
-		});
-		registry.setHandler('tk.slot11', function(direction, status, data1, val) {
-			self.slot(2, 3, val);
-		});
-		registry.setHandler('tk.slot12', function(direction, status, data1, val) {
-			self.slot(3, 3, val);
-		});
-		registry.setHandler('tk.slot13', function(direction, status, data1, val) {
-			self.slot(0, 2, val);
-		});
-		registry.setHandler('tk.slot14', function(direction, status, data1, val) {
-			self.slot(1, 2, val);
-		});
-		registry.setHandler('tk.slot15', function(direction, status, data1, val) {
-			self.slot(2, 2, val);
-		});
-		registry.setHandler('tk.slot16', function(direction, status, data1, val) {
-			self.slot(3, 2, val);
-		});
 	};
 	
 	this.handleTrackBankScroll = function () {
@@ -198,18 +178,18 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 		var clips = channel.getClipLauncherSlots();
 		clips.select(slotIndex);
 	};
-	
+
 	this.slot = function(trackIndex, slotIndex, val) {
 		if(val === 0) return;
+		var _slot = self.slots[trackIndex].trackSlots[slotIndex];
 		var _track = self['track' + trackIndex];
-		var _slot = self.slots[trackIndex][slotIndex];
-		if (!_slot.isSelected) {
-			println('selecting slot ' + slotIndex);
-			_track.select(slotIndex);
-			self.trackBank.getChannel(trackIndex).select();
+
+		if(!_slot.isSelected) {
+			//println('select track: ' + trackIndex + ' slot: ' + slotIndex);
+			self.select(trackIndex, slotIndex);
 		}
 		else if(!_slot.hasContent) {
-			println('record');
+			self.select(trackIndex, slotIndex);
 			//Start rec on transport
 			if(!registry.getStatus('tc.isPlaying')) {
 				registry.getHandler('tc.play')();
@@ -217,21 +197,25 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 			_track.record(slotIndex);
 		}
 		else if(_slot.hasContent && !_slot.isQueued && !_slot.isRecording && !_slot.isPlaying) {
-			println('launching');
+			self.select(trackIndex, slotIndex);
 			_track.launch(slotIndex);
 		}
 		else if(_slot.hasContent && (_slot.isQueued || _slot.isRecording || _slot.isPlaying)) {
-			println('stopping');
+			self.select(trackIndex, slotIndex);
 			var playAfterStop = _slot.isRecording;
 			_track.stop();
 			if(playAfterStop) {
-				//registry.getHandler('tc.play')();
+				_track.launch(slotIndex);
 				_track.showInEditor(slotIndex);
 			}
 		}
-		
-		//is playing or is recording? -> stop
-		//is not empty and double click? -> overdub
+	};
+
+	this.select = function(trackIndex, slotIndex) {
+		var _slot = self.slots[trackIndex].trackSlots[slotIndex];
+		var _track = self['track' + trackIndex];
+		_track.select(slotIndex);
+		self.trackBank.getChannel(trackIndex).select();
 	};
 	
 };
