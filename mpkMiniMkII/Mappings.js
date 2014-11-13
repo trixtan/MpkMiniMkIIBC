@@ -55,7 +55,13 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 7, ccH: 'dv.pageParameter6'}, //K6
 				{CC: 8, ccH: 'dv.pageParameter7'}, //K7
 				{CC: 9, ccH: 'dv.pageParameter8'} //K8
-			]
+			],
+			JOYSTICK: {
+				LEFT: {CC: null},
+				RIGHT: {CC: null},
+				UP: {CC: null},
+				DOWN: {CC: null}
+			}
 		},
 		// PROG2 START ***************
 		{
@@ -96,7 +102,13 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 7, ccH: 'dv.pageParameter6'}, //K6
 				{CC: 8, ccH: 'dv.pageParameter7'}, //K7
 				{CC: 9, ccH: 'dv.pageParameter8'} //K8
-			]
+			],
+			JOYSTICK: {
+				LEFT: {CC:10},
+				RIGHT: {CC: 11},
+				UP: {CC: 12},
+				DOWN: {CC: 13}
+			}
 		},
 		// PROG3 START ***************
 		{
@@ -137,7 +149,13 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 15, ccH: 'mc.macro6'}, //K6
 				{CC: 16, ccH: 'mc.macro7'}, //K7
 				{CC: 17, ccH: 'mc.macro8'} //K8
-			]
+			],
+			JOYSTICK: {
+				LEFT: {CC:18},
+				RIGHT: {CC: 19},
+				UP: {CC: 20},
+				DOWN: {CC: 21}
+			}
 		},
 		// PROG4 START ***************
 		{
@@ -178,7 +196,13 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 23, ccH: 'ud.userControl6'}, //K6
 				{CC: 24, ccH: 'ud.userControl7'}, //K7
 				{CC: 25, ccH: 'ud.userControl8'} //K8
-			]
+			],
+			JOYSTICK: {
+				LEFT: {CC:26},
+				RIGHT: {CC: 27},
+				UP: {CC: 28},
+				DOWN: {CC: 29}
+			}
 		}
 	];
 	
@@ -195,6 +219,12 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				handlersRegistry.addMidiMessage(pad.ccH, prog.STATUS.PADS.CC, pad.CC);
 				handlersRegistry.addMidiMessage(pad.pcH, prog.STATUS.PADS.PC, pad.PC);
 			}
+			var joystickL = prog.JOYSTICK.LEFT;
+			var joystickR = prog.JOYSTICK.RIGHT;
+			var joystickU = prog.JOYSTICK.UP;
+			var joystickD = prog.JOYSTICK.DOWN;
+			handlersRegistry.addMidiMessage(joystickL.ccH, prog.STATUS.PADS.CC, pad.CC);
+			
 		}
 	};
 	
@@ -222,6 +252,7 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				return knobs[i].ccH;
 			}
 		}
+		return null;
 	};
 	
 	this.getPadCCHandler = function(prog, cc) {
@@ -231,6 +262,7 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				return pads[i].ccH;
 			}
 		}
+		return null;
 	};
 	
 	this.getPadPCHandler = function(prog, pc) {
@@ -240,5 +272,6 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				return pads[i].pcH;
 			}
 		}
+		return null;
 	};
 };
