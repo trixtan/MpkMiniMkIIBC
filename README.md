@@ -191,5 +191,5 @@ Mapping 5  Mapping 6 Mapping 7 Mapping 8
 =============
 
 ## Installation
-- Install *.js files in bitwig controllers scripts folder (see http://www.bitwig.com/en/community/installation_guide)
+- Copy mpkMiniMkII folder in bitwig controllers scripts folder (see http://www.bitwig.com/en/community/installation_guide)
 - Using the MPK mini mkII editor Flash the device with the four programs contained in folder mk2_programs 
