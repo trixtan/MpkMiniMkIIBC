@@ -30,7 +30,7 @@ co.nri.MpkMiniMkII = function MpkMiniMkII(host) {
 	var dv = new co.nri.dv.DeviceControl(self.handlersRegistry, host, device, transport, track);
 	var mc = new co.nri.mc.MacroControl(self.handlersRegistry, host, device, transport, track);
 	var ud = new co.nri.ud.UserDefinedControl(self.handlersRegistry, host, device, transport, track);
-	var tk = new co.nri.tk.TrackControl(self.handlersRegistry, host, device, transport, track);
+	var tk = new co.nri.tk.TrackControl(self.handlersRegistry, host, device, transport, track, application);
 	tc.init();
 	dv.init();
 	mc.init();

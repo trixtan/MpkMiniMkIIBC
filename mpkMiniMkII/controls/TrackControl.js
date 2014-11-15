@@ -2,10 +2,10 @@ co.nri.tk = {};
 
 co.nri.tk.SCENES_NUM = 2;
 
-co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport, track) {
+co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport, track, application) {
 	var self = this;
 	this.trackBank;
-	
+
 	this.canScrollUp = false;
 	this.canScrollDown = false;
 	this.canScrollLeft = false;
@@ -19,7 +19,6 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 	this.slots = [];
 	
 	this.init = function() {
-			
 		self.trackBank = host.createMainTrackBank(4, 2, co.nri.tk.SCENES_NUM);
 		self.track0 = self.trackBank.getChannel(0).getClipLauncherSlots();
 		self.track1 = self.trackBank.getChannel(1).getClipLauncherSlots();
@@ -95,6 +94,16 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 		});
 		
 		//HANDLERS
+		registry.setHandler('tk.left', function(direction, status, data1, val) {
+			if(val === 0) return;
+			track.selectPrevious();
+		});
+
+		registry.setHandler('tk.right', function(direction, status, data1, val) {
+			if(val === 0) return;
+			track.selectNext();
+		});
+
 		registry.setHandler('tk.trackBankRight', function(direction, status, data1, val) {
 			if(val === 0) return;
 			if(!self.canScrollRight) return;
@@ -117,27 +126,6 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 			if(val === 0) return;
 			if(!self.canScrollUp) return;
 			self.trackBank.scrollScenesPageUp();
-		});
-		
-		registry.setHandler('tk.record', function(direction, status, data1, val) {
-			if(val === 0) return;
-			if(self.selectedSlot === 0) return;
-			self.slots.select(self.selectedSlot);
-			self.slots.record(self.selectedSlot);
-		});
-		
-		registry.setHandler('tk.launch', function(direction, status, data1, val) {
-			if(val === 0) return;
-			if(self.selectedSlot === 0) return;
-			self.slots.select(self.selectedSlot);
-			self.slots.launch(self.selectedSlot);
-		});
-		
-		registry.setHandler('tk.stop', function(direction, status, data1, val) {
-			if(val === 0) return;
-			if(self.selectedSlot === 0) return;
-			
-			self.slots.stop();
 		});
 		
 		registry.setHandler('tk.slot1', function(direction, status, data1, val) {
@@ -164,11 +152,30 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 		registry.setHandler('tk.slot8', function(direction, status, data1, val) {
 			self.slot(3, 0, val);
 		});
-	};
-	
-	this.handleTrackBankScroll = function () {
-		
-		
+		registry.setHandler('tk.deleteSlot1', function(direction, status, data1, val) {
+			self.deleteSlot(0, 1);
+		});
+		registry.setHandler('tk.deleteSlot2', function(direction, status, data1, val) {
+			self.deleteSlot(1, 1);
+		});
+		registry.setHandler('tk.deleteSlot3', function(direction, status, data1, val) {
+			self.deleteSlot(2, 1);
+		});
+		registry.setHandler('tk.deleteSlot4', function(direction, status, data1, val) {
+			self.deleteSlot(3, 1);
+		});
+		registry.setHandler('tk.deleteSlot5', function(direction, status, data1, val) {
+			self.deleteSlot(0, 0);
+		});
+		registry.setHandler('tk.deleteSlot6', function(direction, status, data1, val) {
+			self.deleteSlot(1, 0);
+		});
+		registry.setHandler('tk.deleteSlot7', function(direction, status, data1, val) {
+			self.deleteSlot(2, 0);
+		});
+		registry.setHandler('tk.deleteSlot8', function(direction, status, data1, val) {
+			self.deleteSlot(3, 0);
+		});
 	};
 	
 	this.selectSlotInBank = function(trackIndex, slotIndex) {
@@ -177,6 +184,12 @@ co.nri.tk.TrackControl = function TrackControl(registry, host, device, transport
 		if(!channel) return;
 		var clips = channel.getClipLauncherSlots();
 		clips.select(slotIndex);
+	};
+
+	this.deleteSlot = function(trackIndex, slotIndex, val) {
+		if(val === 0) return;
+		self.select(trackIndex, slotIndex);
+		application.remove();
 	};
 
 	this.slot = function(trackIndex, slotIndex, val) {

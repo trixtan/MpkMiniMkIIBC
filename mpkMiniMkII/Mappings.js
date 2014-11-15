@@ -40,9 +40,9 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC:7, PC:6, ccH: 'tc.od', pcH: 'dv.pPage7'}, //PAD07
 				{CC:8, PC:7, ccH: null, pcH: 'dv.pPage8'}, //PAD08
 				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage9'}, //PAD09
-				{CC:10, PC:9, ccH: 'tk.stop', pcH: 'dv.pPage10'}, //PAD10
-				{CC:11, PC:10, ccH: 'tk.launch', pcH: 'dv.pPage11'}, //PAD11
-				{CC:12, PC:11, ccH: 'tk.record', pcH: 'dv.pPage12'}, //PAD12
+				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage10'}, //PAD10
+				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage11'}, //PAD11
+				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage12'}, //PAD12
 				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage13'}, //PAD13
 				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage14'}, //PAD14
 				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage15'}, //PAD15
@@ -59,8 +59,8 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 9, ccH: 'dv.pageParameter8'} //K8
 			],
 			JOYSTICK: {
-				LEFT: {CC: null},
-				RIGHT: {CC: null},
+				LEFT: {CC: 26, ccH: 'tk.left'},
+				RIGHT: {CC: 27, ccH: 'tk.right'},
 				UP: {CC: null},
 				DOWN: {CC: null}
 			}
@@ -86,14 +86,14 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC:6, PC:5, ccH: 'tk.slot6', pcH: 'dv.pPage22'}, //PAD06
 				{CC:7, PC:6, ccH: 'tk.slot7', pcH: 'dv.pPage23'}, //PAD07
 				{CC:8, PC:7, ccH: 'tk.slot8', pcH: 'dv.pPage24'}, //PAD08
-				{CC:9, PC:8, ccH: null, pcH: 'dv.pPage25'}, //PAD09
-				{CC:10, PC:9, ccH: null, pcH: 'dv.pPage26'}, //PAD10
-				{CC:11, PC:10, ccH: null, pcH: 'dv.pPage27'}, //PAD11
-				{CC:12, PC:11, ccH: null, pcH: 'dv.pPage29'}, //PAD13
-				{CC:13, PC:12, ccH: null, pcH: 'dv.pPage28'}, //PAD12
-				{CC:14, PC:13, ccH: null, pcH: 'dv.pPage30'}, //PAD14
-				{CC:15, PC:14, ccH: null, pcH: 'dv.pPage31'}, //PAD15
-				{CC:16, PC:15, ccH: null, pcH: 'dv.pPage32'} //PAD16
+				{CC:9, PC:8, ccH: 'tk.deleteSlot1', pcH: 'dv.pPage25'}, //PAD09
+				{CC:10, PC:9, ccH: 'tk.deleteSlot2', pcH: 'dv.pPage26'}, //PAD10
+				{CC:11, PC:10, ccH: 'tk.deleteSlot3', pcH: 'dv.pPage27'}, //PAD11
+				{CC:12, PC:11, ccH: 'tk.deleteSlot4', pcH: 'dv.pPage29'}, //PAD13
+				{CC:13, PC:12, ccH: 'tk.deleteSlot5', pcH: 'dv.pPage28'}, //PAD12
+				{CC:14, PC:13, ccH: 'tk.deleteSlot6', pcH: 'dv.pPage30'}, //PAD14
+				{CC:15, PC:14, ccH: 'tk.deleteSlot7', pcH: 'dv.pPage31'}, //PAD15
+				{CC:16, PC:15, ccH: 'tk.deleteSlot8', pcH: 'dv.pPage32'} //PAD16
 			],
 			KNOBS: [
 				{CC: 2, ccH: 'dv.pageParameter1'}, //K1
@@ -125,22 +125,22 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				}
 			},
 			PADS: [
-				{CC:1, PC:0}, //PAD01
-				{CC:2, PC:1}, //PAD02
-				{CC:3, PC:2}, //PAD03
-				{CC:4, PC:3}, //PAD04
-				{CC:5, PC:4}, //PAD05
-				{CC:6, PC:5}, //PAD06
-				{CC:7, PC:6}, //PAD07
-				{CC:8, PC:7}, //PAD08
-				{CC:9, PC:8}, //PAD09
-				{CC:10, PC:9}, //PAD10
-				{CC:11, PC:10}, //PAD11
-				{CC:12, PC:11}, //PAD12
-				{CC:13, PC:12}, //PAD13
-				{CC:14, PC:13}, //PAD14
-				{CC:15, PC:14}, //PAD15
-				{CC:16, PC:15} //PAD16
+				{CC:1, PC:0, ccH: 'tk.slot1'}, //PAD01
+				{CC:2, PC:1, ccH: 'tk.slot2'}, //PAD02
+				{CC:3, PC:2, ccH: 'tk.slot3'}, //PAD03
+				{CC:4, PC:3, ccH: 'tk.slot4'}, //PAD04
+				{CC:5, PC:4, ccH: 'tk.slot5'}, //PAD05
+				{CC:6, PC:5, ccH: 'tk.slot6'}, //PAD06
+				{CC:7, PC:6, ccH: 'tk.slot7'}, //PAD07
+				{CC:8, PC:7, ccH: 'tk.slot8'}, //PAD08
+				{CC:9, PC:8, ccH: 'tk.deleteSlot1'}, //PAD09
+				{CC:10, PC:9, ccH: 'tk.deleteSlot2'}, //PAD10
+				{CC:11, PC:10, ccH: 'tk.deleteSlot3'}, //PAD11
+				{CC:12, PC:11, ccH: 'tk.deleteSlot4'}, //PAD13
+				{CC:13, PC:12, ccH: 'tk.deleteSlot5'}, //PAD12
+				{CC:14, PC:13, ccH: 'tk.deleteSlot6'}, //PAD14
+				{CC:15, PC:14, ccH: 'tk.deleteSlot7'}, //PAD15
+				{CC:16, PC:15, ccH: 'tk.deleteSlot8'} //PAD16
 			],
 			KNOBS: [
 				{CC: 10, ccH: 'mc.macro1'}, //K1
@@ -153,10 +153,10 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 17, ccH: 'mc.macro8'} //K8
 			],
 			JOYSTICK: {
-				LEFT: {CC:34},
-				RIGHT: {CC: 35},
-				UP: {CC: 36},
-				DOWN: {CC: 37}
+				LEFT: {CC:34, ccH: 'tk.trackBankLeft'},
+				RIGHT: {CC: 35, ccH: 'tk.trackBankRight'},
+				UP: {CC: 36, ccH: 'tk.trackBankUp'},
+				DOWN: {CC: 37, ccH: 'tk.trackBankDown'}
 			}
 		},
 		// PROG4 START ***************
@@ -200,10 +200,10 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				{CC: 25, ccH: 'ud.userControl8'} //K8
 			],
 			JOYSTICK: {
-				LEFT: {CC:38},
-				RIGHT: {CC: 39},
-				UP: {CC: 40},
-				DOWN: {CC: 41}
+				LEFT: {CC:38, ccH: 'tk.trackBankLeft'},
+				RIGHT: {CC: 39, ccH: 'tk.trackBankRight'},
+				UP: {CC: 40, ccH: 'tk.trackBankUp'},
+				DOWN: {CC: 41, ccH: 'tk.trackBankDown'}
 			}
 		}
 	];
@@ -244,22 +244,23 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 	this.wrapInJoystick = function(direction, prog, handlerId) {
 		var _handler = handlersRegistry.getHandler(handlerId);
 		if(!_handler) return;
+		var wrappedHandlerId = self.encodeJoystickHandlerId(prog, handlerId);
 		switch(direction) {
 			case 'up':
 				self.joysticks[prog].addUpCallback(_handler);
-				handlersRegistry.setHandler(handlerId, self.joysticks[prog].up);
+				handlersRegistry.setHandler(wrappedHandlerId, self.joysticks[prog].up);
 				break;
 			case 'down':
 				self.joysticks[prog].addDownCallback(_handler);
-				handlersRegistry.setHandler(handlerId, self.joysticks[prog].down);
+				handlersRegistry.setHandler(wrappedHandlerId, self.joysticks[prog].down);
 				break;
 			case 'left':
 				self.joysticks[prog].addLeftCallback(_handler);
-				handlersRegistry.setHandler(handlerId, self.joysticks[prog].left);
+				handlersRegistry.setHandler(wrappedHandlerId, self.joysticks[prog].left);
 				break;
 			case 'right':
 				self.joysticks[prog].addRightCallback(_handler);
-				handlersRegistry.setHandler(handlerId, self.joysticks[prog].right);
+				handlersRegistry.setHandler(wrappedHandlerId, self.joysticks[prog].right);
 				break;
 		}
 	};
@@ -280,6 +281,11 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 		}
 		return null;
 	};
+
+	this.encodeJoystickHandlerId = function(prog, handlerId) {
+		return 'j.' + prog + '.' + handlerId;
+
+	};
 	
 	this.getKnobOrJoystickHandler = function(prog, cc) {
 		var knobs = self.PROGS[prog].KNOBS;
@@ -290,16 +296,16 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 		}
 		var joystick = self.PROGS[prog].JOYSTICK;
 		if(joystick.LEFT.CC === cc) {
-			return joystick.LEFT.ccH;
+			return self.encodeJoystickHandlerId(prog, joystick.LEFT.ccH);
 		}
 		if(joystick.RIGHT.CC === cc) {
-			return joystick.RIGHT.ccH;
+			return self.encodeJoystickHandlerId(prog, joystick.RIGHT.ccH);
 		}
 		if(joystick.UP.CC === cc) {
-			return joystick.UP.ccH;
+			return self.encodeJoystickHandlerId(prog, joystick.UP.ccH);
 		}
 		if(joystick.DOWN.CC === cc) {
-			return joystick.DOWN.ccH;
+			return self.encodeJoystickHandlerId(prog, joystick.DOWN.ccH)		;
 		}
 		return null;
 	};
