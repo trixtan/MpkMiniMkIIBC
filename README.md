@@ -3,7 +3,7 @@ AKAI Mpk mini mkII Bitwig Controller Script
 Functions marked with * are not yet implemented
 ## PROG1 
 ### Joystick
-- LEFT/RIGHT: Navigate tacks*
+- LEFT/RIGHT: Navigate tacks
 - UP/DOWN: Pitchbend
 
 ### Pads CC Mode
