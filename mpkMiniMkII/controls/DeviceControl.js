@@ -13,6 +13,7 @@ co.nri.dv.DeviceControl = function DeviceControl(registry, host, device) {
 		registry.dv = {};
 	
 		device.addPageNamesObserver(function () {
+			self.parameterPages.length = 0; //Empty pages
 			if (!arguments)
 				return;
 			for (var i = 0; i < arguments.length && i < co.nri.dv.PARAMETER_PAGES_COUNT; i++) {
