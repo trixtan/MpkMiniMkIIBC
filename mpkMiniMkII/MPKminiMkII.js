@@ -41,7 +41,7 @@ co.nri.MpkMiniMkII = function MpkMiniMkII(host) {
 	//NOTE INPUTS
 	var createNoteInputFunction = midiIn.createNoteInput;
 	for(var i=0; i<self.mappings.noteInputs.length; i++) {
-		var noteInput = createNoteInputFunction.apply(midiIn, self.mappings.noteInputs[i].slice(1));
+		var noteInput = midiIn.createNoteInput(self.mappings.noteInputs[i].slice(1));
 		noteInput.setShouldConsumeEvents(self.mappings.noteInputs[i][0]);
 	} 
   };
