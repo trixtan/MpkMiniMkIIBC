@@ -10,11 +10,31 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 	
 	this.noteInputs= [
 		//First element in array is consumeEvent
-		[true, "MPKmini mkII Keys", "80????", "90????", "B001??", "B040??", "D0????", "E0????"],
-		[true, "MPKmini mkII Pads PROG1", "81????", "91????", "D1????", "E1????"],
-		[true, "MPKmini mkII Pads PROG2", "82????", "92????", "D2????", "E2????"],
-		[true, "MPKmini mkII Pads PROG3", "83????", "93????", "D3????", "E3????"],
-		[true, "MPKmini mkII Pads PROG4", "84????", "94????", "D4????", "E4????"],
+            { 
+                shouldConsume: true, 
+                name: "MPKmini mkII Keys", 
+                masks: ["80????", "90????", "B001??", "B040??", "D0????", "E0????"]
+            },
+            { 
+                shouldConsume: true, 
+                name: "MPKmini mkII Pads PROG1", 
+                masks: ["81????", "91????", "D1????", "E1????"]
+            },
+            { 
+                shouldConsume: true, 
+                name: "MPKmini mkII Pads PROG2", 
+                masks: ["82????", "92????", "D2????", "E2????"]
+            },
+            { 
+                shouldConsume: true, 
+                name: "MPKmini mkII Pads PROG3", 
+                masks: ["83????", "93????", "D3????", "E3????"]
+            },
+            { 
+                shouldConsume: true, 
+                name: "MPKmini mkII Pads PROG4", 
+                masks: ["84????", "94????", "D4????", "E4????"]
+            },
 	];
 
 	this.PROGS = [
@@ -31,8 +51,8 @@ co.nri.MkIIMappings = function MkIIMappings(handlersRegistry) {
 				}
 			},
 			PADS: [
-				{CC:1, PC:0, ccH: 'tc.stop', pcH: 'dv.pPage1'}, //PAD01
-				{CC:2, PC:1, ccH: 'tc.play', pcH: 'dv.pPage2'}, //PAD02
+				{CC:1, PC:0, ccH: 'tc.play', pcH: 'dv.pPage1'}, //PAD01
+				{CC:2, PC:1, ccH: 'tc.stop', pcH: 'dv.pPage2'}, //PAD02
 				{CC:3, PC:2, ccH: 'tc.rec', pcH: 'dv.pPage3'}, //PAD03
 				{CC:4, PC:3, ccH: null, pcH: 'dv.pPage4'}, //PAD04
 				{CC:5, PC:4, ccH: 'tc.loop', pcH: 'dv.pPage5'}, //PAD05

@@ -38,11 +38,10 @@ co.nri.MpkMiniMkII = function MpkMiniMkII(host) {
 	tk.init();
 	self.mappings.init();
 	
-	//NOTE INPUTS
-	var createNoteInputFunction = midiIn.createNoteInput;
-	for(var i=0; i<self.mappings.noteInputs.length; i++) {
-		var noteInput = createNoteInputFunction.apply(midiIn, self.mappings.noteInputs[i].slice(1));
-		noteInput.setShouldConsumeEvents(self.mappings.noteInputs[i][0]);
+        // Grab note inputs and send them directly to instruments
+	for(let params of self.mappings.noteInputs) {
+		let noteInput = midiIn.createNoteInput(params.name, params.masks);
+		noteInput.setShouldConsumeEvents(params.shouldConsume);
 	} 
   };
 
